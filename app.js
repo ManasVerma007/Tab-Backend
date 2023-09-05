@@ -14,7 +14,7 @@ const {
   const PORT = 8000;
 
 mongoose
-.connect("mongodb+srv://manasverma012345:GhostRider123@cluster1.snklost.mongodb.net/tabs-api?retryWrites=true&w=majority")
+.connect(process.env.MONGODB)
 .then((e)=>{
     console.log("Mongodb Connected")
 })

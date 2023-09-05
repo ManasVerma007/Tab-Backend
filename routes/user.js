@@ -41,10 +41,9 @@ router.post("/googlesignin", async (req, res) => {
       fullname
     });
     const token = await GoogleUser.GenerateToken(fullname, email);
- 
+    // console.log(token)
     // Send the token in the response
     return res
-      .cookie("token", token)
       .status(200)
       .json({ message: "Signin successful", token }); // Include the token in the response
 
