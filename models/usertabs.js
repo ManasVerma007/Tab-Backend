@@ -15,9 +15,15 @@ const tabSchema = new Schema(
       type: String,
       required: true,
     },
+    folderId: {
+      // Include folderId in each tab
+      type: String,
+      required: true, // Make it required
+    },
   },
   { _id: false } // Disable automatic generation of _id for subdocuments
 );
+
 
 // Define the user schema
 const usertabsSchema = new Schema(
@@ -30,13 +36,23 @@ const usertabsSchema = new Schema(
       type: String,
       required: true,
     },
-    folderId: {
-      type: String,
-    },
-    tabs: [tabSchema], // Define tabs as an array of tab subdocuments
+    folders: [
+      {
+        folderId: {
+          type: String,
+          required: true,
+        },
+        folderName: {
+          type: String,
+          required: true,
+        },
+        tabs: [tabSchema], // Define tabs as an array of tab subdocuments
+      },
+    ],
   },
   { timestamps: true }
 );
+
 
 // Create the User model
 const Usertabs = model("usertabs", usertabsSchema);
