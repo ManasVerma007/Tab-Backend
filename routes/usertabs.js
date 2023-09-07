@@ -4,7 +4,7 @@ const Usertabs = require("../models/usertabs");
 const router = Router();
 
 
-
+console.log("hi")
 
 // Get all tabs for a specific user and folder
 router.get("/gettabs/:userId/:folderId", async (req, res) => {
