@@ -7,11 +7,11 @@ const tabSchema = new Schema(
       type: String,
       required: true,
     },
-    tabTitle: {
+    title: {
       type: String,
       required: true,
     },
-    tabUrl: {
+    url: {
       type: String,
       required: true,
     },
