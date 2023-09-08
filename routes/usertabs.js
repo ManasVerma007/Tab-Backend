@@ -58,7 +58,7 @@ router.post("/addtab/:userId/:folderId", async (req, res) => {
     const newTabData = req.body;
 
     // Find the user by userId
-    const user = await Usertabs.findOne({ userId });
+    
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });

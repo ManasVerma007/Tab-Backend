@@ -53,6 +53,31 @@ router.post("/googlesignin", async (req, res) => {
   }
 });
 
+router.get("/googletoken/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
+    const user = await GoogleUser.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+ 
+    const fullname = user.fullname;
+    // console.log(user)
+    const token = await GoogleUser.GenerateToken(fullname, email);
+    console.log(token);
+
+    // Send the token in the response
+    return res
+      .status(200)
+      .json({ message: "Token generated", token });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
 router.post("/signup", async (req, res) => {
   const { fullname, email, password } = req.body;
 
