@@ -12,7 +12,7 @@ const {
   } = require("./middlewares/authentication");
 
   const PORT = 8000;
-
+  mongoose.set('strictQuery', true);
 mongoose
 .connect(process.env.MONGODB)
 .then((e)=>{
@@ -33,6 +33,7 @@ app.use((req, res, next) => {
 
 app.set("view engine", "ejs")
 app.set("views", path.resolve("./views")) 
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(checkForAuthenticationCookie("token"));
