@@ -24,7 +24,6 @@ const tabSchema = new Schema(
   { _id: false } // Disable automatic generation of _id for subdocuments
 );
 
-
 // Define the user schema
 const usertabsSchema = new Schema(
   {
@@ -52,7 +51,6 @@ const usertabsSchema = new Schema(
   },
   { timestamps: true }
 );
-
 
 // Create the User model
 const Usertabs = model("usertabs", usertabsSchema);

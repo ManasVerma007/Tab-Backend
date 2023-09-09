@@ -4,8 +4,6 @@ const Usertabs = require("../models/usertabs");
 const router = Router();
 
 
-console.log("hi")
-
 // Get all tabs for a specific user and folder
 router.get("/gettabs/:userId/:folderId", async (req, res) => {
   try {
@@ -58,7 +56,7 @@ router.post("/addtab/:userId/:folderId", async (req, res) => {
     const newTabData = req.body;
 
     // Find the user by userId
-    
+    const user = await Usertabs.findOne({ userId });
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
