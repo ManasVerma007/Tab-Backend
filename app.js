@@ -41,5 +41,5 @@ app.use(checkForAuthenticationCookie("token"));
 app.use(express.urlencoded({ extended: false }));
 app.use("/user", userRoute);
 app.use("/usertabs", usertabsRoute);
-app.listen(PORT, ()=> console.log(`server has started at PORT ${PORT}`)) 
+app.listen(PORT,"0.0.0.0", ()=> console.log(`server has started at PORT ${PORT}`)) 
 
