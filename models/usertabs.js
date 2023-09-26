@@ -20,6 +20,14 @@ const tabSchema = new Schema(
       type: String,
       required: true, // Make it required
     },
+    timeSpent: {
+      type: Number,
+      default: 0, // Initialize to 0
+    },
+    clickCount: {
+      type: Number,
+      default: 0, // Initialize to 0
+    },
   },
   { _id: false } // Disable automatic generation of _id for subdocuments
 );

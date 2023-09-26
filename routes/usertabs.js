@@ -89,6 +89,7 @@ router.post("/addtab/:userId/:folderId", async (req, res) => {
 router.delete("/deletetab/:userId/:folderId/:tabId", async (req, res) => {
   try {
     const { userId, folderId, tabId } = req.params;
+    console.log(userId, folderId, tabId);
 
     // Find the user by userId
     const user = await Usertabs.findOne({ userId });
@@ -182,6 +183,138 @@ router.delete("/deletefolder/:userId/:folderId", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Endpoint to record time spent on a tab
+router.post('/track-time/:userId/:folderId/:tabId', async (req, res) => {
+  try {
+    const { userId, folderId, tabId } = req.params;
+    const { startTime, endTime } = req.body;
+    
+    // Calculate time spent on the tab
+    const timeSpent = endTime - startTime;
+
+    // Find the user document that matches the userId
+    const user = await Usertabs.findOne({ userId });
+
+    // Find the folder within the user's folders array that matches folderId
+    const folder = user.folders.find((folder) => folder.folderId === folderId);
+
+    // Find the tab within the folder's tabs array that matches tabId
+    const tab = folder.tabs.find((tab) => tab.tabId === tabId);
+
+    // Increment the tab's timeSpent field
+    tab.timeSpent += timeSpent;
+
+    // Save the updated user document
+    await user.save();
+
+    res.json({ message: 'Time tracked successfully.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+// Endpoint to track user clicks on a tab
+router.post('/track-click/:userId/:folderId/:tabId', async (req, res) => {
+  try {
+    const { userId, folderId, tabId } = req.params;
+
+    // Find the user document that matches the userId
+    const user = await Usertabs.findOne({ userId });
+
+    // Find the folder within the user's folders array that matches folderId
+    const folder = user.folders.find((folder) => folder.folderId === folderId);
+
+    // Find the tab within the folder's tabs array that matches tabId
+    const tab = folder.tabs.find((tab) => tab.tabId === tabId);
+
+    // Increment the tab's clickCount field
+    tab.clickCount += 1;
+
+    // Save the updated user document
+    await user.save();
+
+    res.json({ message: 'Click tracked successfully.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Endpoint to get time spent on each folder for a user
+router.get('/time-spent/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Find the user document that matches the userId
+    const user = await Usertabs.findOne({ userId });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+
+    // Initialize an array to store folder time data for the Pie chart
+    const folderTimeData = [];
+
+    // Iterate through folders and calculate total time spent
+    for (const folder of user.folders) {
+      let totalFolderTime = 0;
+
+      for (const tab of folder.tabs) {
+        totalFolderTime += tab.timeSpent;
+      }
+
+      // Add folder time data to the array
+      folderTimeData.push({
+        folderName: folder.folderName,
+        timeSpent: totalFolderTime,
+      });
+    }
+
+    res.json(folderTimeData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.get('/tabsclick/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Find the user document that matches the userId
+    const user = await Usertabs.findOne({ userId });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+
+    // Initialize an array to store tab information
+    const tabsInfo = [];
+
+    // Iterate through folders and tabs to collect tab information
+    for (const folder of user.folders) {
+      for (const tab of folder.tabs) {
+        tabsInfo.push({
+          tabId: tab.tabId,
+          title: tab.title,
+          url: tab.url,
+          clickCount: tab.clickCount,
+        });
+      }
+    }
+
+    // Sort the tabs in ascending order based on clickCount
+    tabsInfo.sort((a, b) => a.clickCount - b.clickCount);
+
+    res.json(tabsInfo);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
