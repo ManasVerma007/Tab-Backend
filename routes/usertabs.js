@@ -318,4 +318,36 @@ router.get('/tabsclick/:userId', async (req, res) => {
   }
 });
 
+router.get("/getalltabsdata/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Find the user by userId
+    const user = await Usertabs.findOne({ userId });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Extract the desired data from all folders and tabs
+    const allTabsData = [];
+
+    user.folders.forEach((folder) => {
+      folder.tabs.forEach((tab) => {
+        allTabsData.push({
+          userId: user.userId,
+          folderId: folder.folderId,
+          tabId: tab.tabId,
+          tabTitle: tab.title,
+        });
+      });
+    });
+
+    res.status(200).json(allTabsData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 module.exports = router;
