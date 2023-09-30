@@ -190,10 +190,12 @@ router.delete("/deletefolder/:userId/:folderId", async (req, res) => {
 router.post('/track-time/:userId/:folderId/:tabId', async (req, res) => {
   try {
     const { userId, folderId, tabId } = req.params;
-    const { startTime, endTime } = req.body;
+    console.log(userId, folderId, tabId);
+    const { time } = req.body;
+    console.log(time); 
     
     // Calculate time spent on the tab
-    const timeSpent = endTime - startTime;
+    const timeSpent = time;
 
     // Find the user document that matches the userId
     const user = await Usertabs.findOne({ userId });
